@@ -49,7 +49,7 @@ public class LineService {
         Line lineToAdd = new Line(lineName, lineColor);
         LineEntity lineEntity = lineDao.save(lineToAdd);
 
-        saveFirstSection(lineInfo, upStationId, downStationId, lineEntity);
+        saveFirstSection(lineInfo.getDistance(), upStationId, downStationId, lineEntity.getId());
 
         Line resultLine = lineCreator.createLine(lineEntity.getId());
 
@@ -63,11 +63,11 @@ public class LineService {
         validateNotExistStation(downStationId);
     }
 
-    private void saveFirstSection(RequestForLineService lineInfo, Long upStationId, Long downStationId,
-        LineEntity lineEntity) {
+    private void saveFirstSection(int distance, Long upStationId, Long downStationId,
+        long lineId) {
         Section section = new Section(stationDao.getStation(upStationId), stationDao.getStation(downStationId),
-            lineInfo.getDistance());
-        sectionDao.save(lineEntity.getId(), section);
+            distance);
+        sectionDao.save(lineId, section);
     }
 
     public List<ResponseToLineService> findAll() {

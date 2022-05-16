@@ -1,17 +1,17 @@
 package wooteco.subway.dto;
 
 public class LineEntity {
-    private final Long id;
+    private final long id;
     private final String name;
     private final String color;
 
-    public LineEntity(Long id, String name, String color) {
+    public LineEntity(long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 

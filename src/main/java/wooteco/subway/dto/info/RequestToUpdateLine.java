@@ -1,17 +1,17 @@
 package wooteco.subway.dto.info;
 
 public class RequestToUpdateLine {
-    private Long id;
+    private long id;
     private String name;
     private String color;
 
-    public RequestToUpdateLine(Long id, String name, String color) {
+    public RequestToUpdateLine(long id, String name, String color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
