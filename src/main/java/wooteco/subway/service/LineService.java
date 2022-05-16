@@ -14,9 +14,9 @@ import wooteco.subway.domain.Line;
 import wooteco.subway.domain.Section;
 import wooteco.subway.domain.Station;
 import wooteco.subway.dto.LineEntity;
-import wooteco.subway.dto.info.RequestForLineService;
-import wooteco.subway.dto.info.RequestToUpdateLine;
-import wooteco.subway.dto.info.ResponseToLineService;
+import wooteco.subway.dto.info.LineServiceRequest;
+import wooteco.subway.dto.info.LineServiceResponse;
+import wooteco.subway.dto.info.LineUpdateRequest;
 import wooteco.subway.dto.info.StationDto;
 
 @Service
@@ -38,7 +38,7 @@ public class LineService {
     }
 
     @Transactional
-    public ResponseToLineService save(RequestForLineService lineInfo) {
+    public LineServiceResponse save(LineServiceRequest lineInfo) {
         String lineName = lineInfo.getName();
         String lineColor = lineInfo.getColor();
         Long upStationId = lineInfo.getUpStationId();
@@ -53,7 +53,7 @@ public class LineService {
 
         Line resultLine = lineCreator.createLine(lineEntity.getId());
 
-        return new ResponseToLineService(resultLine.getId(), resultLine.getName(), resultLine.getColor(),
+        return new LineServiceResponse(resultLine.getId(), resultLine.getName(), resultLine.getColor(),
             convertStationToInfo(resultLine.getStations()));
     }
 
@@ -70,26 +70,26 @@ public class LineService {
         sectionDao.save(lineId, section);
     }
 
-    public List<ResponseToLineService> findAll() {
+    public List<LineServiceResponse> findAll() {
         List<Line> lines = new ArrayList<>();
         List<LineEntity> lineEntities = lineDao.findAll();
         for (LineEntity lineEntity : lineEntities) {
             lines.add(lineCreator.createLine(lineEntity.getId()));
         }
 
-        List<ResponseToLineService> responseToLineServices = new ArrayList<>();
+        List<LineServiceResponse> lineServiceResponses = new ArrayList<>();
         for (Line line : lines) {
-            responseToLineServices.add(new ResponseToLineService(line.getId(), line.getName(), line.getColor(),
+            lineServiceResponses.add(new LineServiceResponse(line.getId(), line.getName(), line.getColor(),
                 convertStationToInfo(line.getStations())));
         }
-        return responseToLineServices;
+        return lineServiceResponses;
     }
 
-    public ResponseToLineService find(Long id) {
+    public LineServiceResponse find(Long id) {
         validateNotExists(id);
         LineEntity lineEntity = lineDao.find(id);
         Line line = lineCreator.createLine(lineEntity.getId());
-        return new ResponseToLineService(line.getId(), line.getName(), line.getColor(),
+        return new LineServiceResponse(line.getId(), line.getName(), line.getColor(),
             convertStationToInfo(line.getStations()));
     }
 
@@ -99,13 +99,13 @@ public class LineService {
             .collect(Collectors.toList());
     }
 
-    public void update(RequestToUpdateLine requestToUpdateLine) {
-        Long id = requestToUpdateLine.getId();
-        String name = requestToUpdateLine.getName();
+    public void update(LineUpdateRequest lineUpdateRequest) {
+        Long id = lineUpdateRequest.getId();
+        String name = lineUpdateRequest.getName();
 
         validateNotExists(id);
         validateNameDuplication(name);
-        Line line = new Line(id, name, requestToUpdateLine.getColor());
+        Line line = new Line(id, name, lineUpdateRequest.getColor());
         lineDao.update(line);
     }
 

@@ -11,8 +11,8 @@ import wooteco.subway.domain.Section;
 import wooteco.subway.domain.Sections;
 import wooteco.subway.domain.Station;
 import wooteco.subway.dto.LineEntity;
-import wooteco.subway.dto.info.RequestToCreateSection;
-import wooteco.subway.dto.info.RequestToDeleteSection;
+import wooteco.subway.dto.info.SectionCreateRequest;
+import wooteco.subway.dto.info.SectionDeleteRequest;
 
 @Service
 public class SectionService {
@@ -33,15 +33,15 @@ public class SectionService {
     }
 
     @Transactional
-    public void save(RequestToCreateSection requestToCreateSection) {
-        Long lineId = requestToCreateSection.getLineId();
-        Long upStationId = requestToCreateSection.getUpStationId();
-        Long downStationId = requestToCreateSection.getDownStationId();
+    public void save(SectionCreateRequest sectionCreateRequest) {
+        Long lineId = sectionCreateRequest.getLineId();
+        Long upStationId = sectionCreateRequest.getUpStationId();
+        Long downStationId = sectionCreateRequest.getDownStationId();
 
         validateBeforeSave(lineId, upStationId, downStationId);
 
         Section section = new Section(stationDao.getStation(upStationId), stationDao.getStation(downStationId),
-            requestToCreateSection.getDistance());
+            sectionCreateRequest.getDistance());
         LineEntity lineEntity = lineDao.find(lineId);
         Line line = lineCreator.createLine(lineEntity.getId());
         line.updateToAdd(section);
@@ -62,9 +62,9 @@ public class SectionService {
     }
 
     @Transactional
-    public void delete(RequestToDeleteSection requestToDeleteSection) {
-        Long lineId = requestToDeleteSection.getLineId();
-        Long stationId = requestToDeleteSection.getStationId();
+    public void delete(SectionDeleteRequest sectionDeleteRequest) {
+        Long lineId = sectionDeleteRequest.getLineId();
+        Long stationId = sectionDeleteRequest.getStationId();
 
         validateNotExistsLine(lineId);
         validateNotExistStation(stationId);

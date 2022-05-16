@@ -1,12 +1,12 @@
 package wooteco.subway.dto.info;
 
-public class RequestToCreateSection {
+public class SectionCreateRequest {
     private final long lineId;
     private final long upStationId;
     private final long downStationId;
     private final int distance;
 
-    public RequestToCreateSection(long lineId, long upStationId, long downStationId, int distance) {
+    public SectionCreateRequest(long lineId, long upStationId, long downStationId, int distance) {
         this.lineId = lineId;
         this.upStationId = upStationId;
         this.downStationId = downStationId;
